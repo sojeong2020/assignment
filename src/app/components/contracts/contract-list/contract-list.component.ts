@@ -24,7 +24,9 @@ export class ContractListComponent implements OnInit {
     public fetchContracts(filters: Partial<GetContractsParams> = {}): void {
         this.gridApi.showLoadingOverlay();
         this.contractsService.getContracts(filters).subscribe((data) => {
+          console.log(filters,"filters")
             this.contracts = data;
+            console.log(this.contracts,"this.contracts")
             this.gridApi.hideOverlay();
         });
     }
@@ -69,6 +71,11 @@ export class ContractListComponent implements OnInit {
                 suppressFilter: true,
             },
             {
+              field: 'contractStatus',
+              headerName: 'Status',
+              valueGetter: 'data.contractStatus',
+          },
+            {
                 field: 'customerName',
                 headerName: 'Customer Name',
                 valueGetter: 'data.customerName',
@@ -93,7 +100,24 @@ export class ContractListComponent implements OnInit {
                 headerName: 'End Date',
                 valueGetter: 'data.endDate',
             },
+            {
+              field: 'durationInDays',
+              headerName: 'Duration in Days',
+             // valueGetter: 'data.endDate',
+          },
+          {
+            field: 'totalIncVat',
+            headerName: 'Total Inc VAT',
+            valueGetter: 'data.totalIncVat',
+          },
+          {
+            field: 'delete',
+            headerName: 'Delete',
+            cellRendererFramework: ContractTypeCellRendererComponent,
+            suppressFilter: true,
+          },
         ];
+
     }
 
     @HostListener('window:resize', ['$event'])
