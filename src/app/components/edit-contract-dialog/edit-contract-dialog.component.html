@@ -9,9 +9,44 @@
 
 <mat-dialog-content>
     <p>Here is a form to edit a contract.</p>
+    <form [formGroup]="form" class="edit-contract-form">
+      <mat-form-field appearance="outline">
+          <mat-label>Contract Type</mat-label>
+          <mat-select formControlName="contractType">
+              <mat-option *ngFor="let type of contractTypes" [value]="type">
+                  {{ type }}
+              </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+          <mat-label>Contract Status</mat-label>
+          <mat-select formControlName="contractStatus">
+              <mat-option *ngFor="let status of contractStatuses" [value]="status">
+                  {{ status }}
+              </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate">
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <p>Quote: {{ quote | currency:'GBP':'symbol':'1.2-2' }}</p>
+  </form>
 </mat-dialog-content>
 
 <mat-dialog-actions class="dialog-actions">
     <button mat-stroked-button color="basic" type="button" mat-dialog-close>Close</button>
-    <button mat-flat-button color="primary" class="primary-button" type="button" (click)="update()">Update</button>
+    <button mat-flat-button color="primary" class="primary-button" type="button" (click)="update()" [disabled]="form.invalid">Update</button>
 </mat-dialog-actions>

@@ -15,7 +15,7 @@ export class DeleteCellRendererComponent implements ICellRendererAngularComp {
 
     agInit(params: ICellRendererParams): void {
         this.params = params;
-        console.log(this.params,"this.params")
+      //  console.log(this.params,"this.params")
     }
 
     refresh(params: ICellRendererParams): boolean {

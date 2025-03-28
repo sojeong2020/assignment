@@ -45,7 +45,7 @@ export class ContractListComponent implements OnInit {
             context: { componentParent: this },
             onGridReady: (params: GridReadyEvent) => this.onGridReady(params),
             onRowDataChanged: (params: RowDataChangedEvent) => params.api.sizeColumnsToFit(),
-            onRowClicked: (event) => this.openEditDialog(event.data),
+            //onRowClicked: (event) => this.openEditDialog(event.data),
         };
     }
 
@@ -55,10 +55,25 @@ export class ContractListComponent implements OnInit {
     }
 
     private openEditDialog(contract: Contract): void {
-        this.dialog.open(EditContractDialogComponent, {
+        const dialogRef = this.dialog.open(EditContractDialogComponent, {
             data: { contract },
             width: '600px',
         });
+
+        dialogRef.afterClosed().subscribe((result: Contract) => {
+          if (result) {
+              // Update the contract in the grid
+              const updatedContracts = this.contracts.map(c => c.id === result.id ? result : c);
+              this.contracts = updatedContracts;
+
+              //setTimeout to delay the grid update
+              setTimeout(() => {
+                this.gridApi.setRowData(this.contracts);
+              }, 0);
+              // Refresh the grid
+             // this.gridApi.setRowData(this.contracts);
+          }
+      });
     }
 
     private createColumnDefs(): ColDef[] {
@@ -71,6 +86,7 @@ export class ContractListComponent implements OnInit {
                 width: 120,
                 maxWidth: 120,
                 suppressFilter: true,
+                onCellClicked: (params) => this.openEditDialog(params.data),
             },
             {
               field: 'contractStatus',
@@ -80,6 +96,7 @@ export class ContractListComponent implements OnInit {
               width: 100,
               maxWidth: 100,
               suppressFilter: true,
+              onCellClicked: (params) => this.openEditDialog(params.data),
           },
             {
                 field: 'customerName',
@@ -107,6 +124,7 @@ export class ContractListComponent implements OnInit {
                       year: 'numeric',
                   });
               },
+              onCellClicked: (params) => this.openEditDialog(params.data),
             },
             {
                 field: 'endDate',
@@ -119,11 +137,18 @@ export class ContractListComponent implements OnInit {
                       year: 'numeric',
                   });
               },
+              onCellClicked: (params) => this.openEditDialog(params.data),
             },
             {
               field: 'durationInDays',
               headerName: 'Duration in Days',
-              valueGetter: (params) => params.data.getDurationInDays(),
+              //valueGetter: (params) => params.data.getDurationInDays(),
+              valueGetter: (params) => {
+                const start = new Date(params.data.startDate);
+                const end = new Date(params.data.endDate);
+                const diffTime = Math.abs(end.getTime() - start.getTime());
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            },
           },
           {
             field: 'totalIncVat',
