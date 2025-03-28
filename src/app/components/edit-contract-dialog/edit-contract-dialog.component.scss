@@ -11,6 +11,12 @@
     width: calc(100% + 48px);
 }
 
+.edit-contract-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .dialog-actions {
     display: flex;
     align-items: center;
