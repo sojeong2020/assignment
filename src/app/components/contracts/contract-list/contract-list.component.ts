@@ -3,6 +3,8 @@ import { ContractsService } from 'src/app/services/contracts.service';
 import { Contract, GetContractsParams } from 'src/app/models/contract.model';
 import { ColDef, GridApi, GridOptions, GridReadyEvent, RowDataChangedEvent } from 'ag-grid-community';
 import { ContractTypeCellRendererComponent } from '../cell-renderers/contract-type-cell-renderer/contract-type-cell-renderer.component';
+import { ContractStatusCellRendererComponent } from '../cell-renderers/contract-status-cell-renderer/contract-status-cell-renderer.component';
+import { DeleteCellRendererComponent } from '../cell-renderers/delete-cell-renderer/delete-cell-renderer.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditContractDialogComponent } from '../../edit-contract-dialog/edit-contract-dialog.component';
 
@@ -73,7 +75,11 @@ export class ContractListComponent implements OnInit {
             {
               field: 'contractStatus',
               headerName: 'Status',
-              valueGetter: 'data.contractStatus',
+              cellRendererFramework: ContractStatusCellRendererComponent,
+              minWidth: 100,
+              width: 100,
+              maxWidth: 100,
+              suppressFilter: true,
           },
             {
                 field: 'customerName',
@@ -94,26 +100,49 @@ export class ContractListComponent implements OnInit {
                 field: 'startDate',
                 headerName: 'Start Date',
                 valueGetter: 'data.startDate',
+                valueFormatter: (params) => {
+                  return new Date(params.value).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                  });
+              },
             },
             {
                 field: 'endDate',
                 headerName: 'End Date',
                 valueGetter: 'data.endDate',
+                valueFormatter: (params) => {
+                  return new Date(params.value).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                  });
+              },
             },
             {
               field: 'durationInDays',
               headerName: 'Duration in Days',
-             // valueGetter: 'data.endDate',
+              valueGetter: (params) => params.data.getDurationInDays(),
           },
           {
             field: 'totalIncVat',
             headerName: 'Total Inc VAT',
             valueGetter: 'data.totalIncVat',
+            valueFormatter: (params) => {
+              return params.data.currency + ' ' + params.value.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+              });
+          },
           },
           {
             field: 'delete',
             headerName: 'Delete',
-            cellRendererFramework: ContractTypeCellRendererComponent,
+            cellRendererFramework: DeleteCellRendererComponent,
+            minWidth: 80,
+            width: 80,
+            maxWidth: 80,
             suppressFilter: true,
           },
         ];

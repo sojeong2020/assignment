@@ -23,8 +23,6 @@ export class ContractsService {
             filter((contract) => this.filterByType(contract, contractType)),
             filter((contract) => this.filterByStartDate(contract, startDate)),
             filter((contract) => this.filterByEndDate(contract, endDate)),
-
-
             toArray()
         );
     }
@@ -71,6 +69,7 @@ export class ContractsService {
             delay(1000),
             map(() => {
                 this.contracts = this.contracts.filter((c) => c.id !== id);
+                console.log(this.contracts,"this.contracts")
             })
         );
     }

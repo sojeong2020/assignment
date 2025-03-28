@@ -34,7 +34,10 @@ export class Contract {
     }
 
     getDurationInDays(): number {
-        throw new Error('Not implemented');
+      const start = new Date(this.startDate);
+      const end = new Date(this.endDate);
+      const differentTime = Math.abs(end.getTime() - start.getTime());
+      return Math.ceil(differentTime / (1000 * 60 * 60 * 24));
     }
 }
 
